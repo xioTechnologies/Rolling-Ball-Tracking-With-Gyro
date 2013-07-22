@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Threading;
-
 using System.Windows.Forms;
 
 namespace x_IMU_Ball_Tracking
@@ -37,10 +36,9 @@ namespace x_IMU_Ball_Tracking
 
                 // Connect to x-IMU
                 Console.WriteLine("Searching for x-IMU...");
-                x_IMU_API.PortScanner portScanner = new x_IMU_API.PortScanner(true, true);
-                x_IMU_API.PortAssignment[] portAssignment = portScanner.Scan();
+                x_IMU_API.PortAssignment[] portAssignment = (new x_IMU_API.PortScanner(true, true)).Scan();
                 x_IMU_API.xIMUserial xIMUserial = new x_IMU_API.xIMUserial(portAssignment[0].PortName);
-                xIMUserial.CalInertialMagneticDataReceived += new x_IMU_API.xIMUserial.onCalInertialMagneticDataReceived(xIMUserial_CalInertialMagneticDataReceived);
+                xIMUserial.CalInertialAndMagneticDataReceived += new x_IMU_API.xIMUserial.onCalInertialAndMagneticDataReceived(xIMUserial_CalInertialMagneticDataReceived);
                 xIMUserial.QuaternionDataReceived += new x_IMU_API.xIMUserial.onQuaternionDataReceived(xIMUserial_QuaternionDataReceived);
                 xIMUserial.Open();
                 Console.WriteLine("Connected to x-IMU " + portAssignment[0].DeviceID + " on " + portAssignment[0].PortName + ".");
@@ -70,7 +68,7 @@ namespace x_IMU_Ball_Tracking
         /// <summary>
         /// Calibrated inertial/magnetic data received event to update objects.
         /// </summary>
-        static void xIMUserial_CalInertialMagneticDataReceived(object sender, x_IMU_API.CalInertialMagneticData e)
+        static void xIMUserial_CalInertialMagneticDataReceived(object sender, x_IMU_API.CalInertialAndMagneticData e)
         {
             ballTracking.Gyroscope = new float[] { (e.Gyroscope[0] / 360) * (float)(2 * Math.PI), (e.Gyroscope[1] / 360) * (float)(2 * Math.PI), (e.Gyroscope[2] / 360) * (float)(2 * Math.PI) };
             ballTracking.Update();

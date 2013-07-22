@@ -10,66 +10,20 @@ namespace x_IMU_Ball_Tracking
     /// </summary>
     class BallTracking
     {
-        private float privRadius;
-        private float privSamplePeriod;
-        private float[] privGyroscope;
-        private float[] privRotationMatrix;
-        private float[] privPosition;
-        private float[] privVelocity;
-
         /// <summary>
         /// Gets or sets the radius of ball in meters.
         /// </summary>
-        public float Radius
-        {
-            get
-            {
-                return privRadius;
-            }
-            set
-            {
-                if (value <= 0.0f)
-                {
-                    throw new Exception("Radius must be a positive value.");
-                }
-                privRadius = value;
-            }
-        }
+        public float Radius { get; set; }
 
         /// <summary>
         /// Gets or sets the sample period in second.
         /// </summary>
-        public float SamplePeriod
-        {
-            get
-            {
-                return privSamplePeriod;
-            }
-            set
-            {
-                if (value <= 0.0f)
-                {
-                    throw new Exception("Sample period must be a positive value.");
-                }
-                privSamplePeriod = value;
-            }
-        }
+        public float SamplePeriod { get; set; }
 
         /// <summary>
         /// Gets or sets the gyroscope measurement in radians per second.
         /// </summary>
-        public float[] Gyroscope
-        {
-            get
-            {
-                return privGyroscope;
-            }
-            set
-            {
-                if (value.Length != 3) throw new Exception("Array must be of length 3.");
-                privGyroscope = value;
-            }
-        }
+        public float[] Gyroscope { get; set; }
 
         /// <summary>
         /// Gets or sets the rotation matrix describing the orientation of ball relative to surface.
@@ -77,50 +31,17 @@ namespace x_IMU_Ball_Tracking
         /// <remarks>
         /// Index order is row major. See http://en.wikipedia.org/wiki/Row-major_order
         /// </remarks> 
-        public float[] RotationMatrix
-        {
-            get
-            {
-                return privRotationMatrix;
-            }
-            set
-            {
-                if (value.Length != 9) throw new Exception("Array must be of length 9.");
-                privRotationMatrix = value;
-            }
-        }
+        public float[] RotationMatrix { get; set; }
 
         /// <summary>
         /// Gets or sets the position of ball on surface.
         /// </summary>
-        public float[] Position
-        {
-            get
-            {
-                return privPosition;
-            }
-            set
-            {
-                if (value.Length != 2) throw new Exception("Array must be of length 2.");
-                privPosition = value;
-            }
-        }
+        public float[] Position { get; set; }
 
         /// <summary>
         /// Gets or sets the velocity of ball on surface.
         /// </summary>
-        public float[] Velocity
-        {
-            get
-            {
-                return privVelocity;
-            }
-            set
-            {
-                if (value.Length != 2) throw new Exception("Array must be of length 2.");
-                privVelocity = value;
-            }
-        }
+        public float[] Velocity { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BallTracking"/> class.

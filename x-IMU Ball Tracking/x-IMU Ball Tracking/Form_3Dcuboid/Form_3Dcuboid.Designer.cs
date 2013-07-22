@@ -28,9 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.simpleOpenGlControl = new Tao.Platform.Windows.SimpleOpenGlControl();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // simpleOpenGlControl
@@ -53,11 +51,6 @@
             this.simpleOpenGlControl.SizeChanged += new System.EventHandler(this.simpleOpenGlControl_SizeChanged);
             this.simpleOpenGlControl.Paint += new System.Windows.Forms.PaintEventHandler(this.simpleOpenGlControl_Paint);
             // 
-            // timer
-            // 
-            this.timer.Interval = 20;
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
             // Form_3Dcuboid
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -67,7 +60,7 @@
             this.Name = "Form_3Dcuboid";
             this.Text = "3D Cuboid";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_3Dcuboid_FormClosing);
-            this.Load += new System.EventHandler(this.Form_3Dcuboid_Load);
+            this.VisibleChanged += new System.EventHandler(this.Form_3Dcuboid_VisibleChanged);
             this.ResumeLayout(false);
 
         }
@@ -75,6 +68,5 @@
         #endregion
 
         private Tao.Platform.Windows.SimpleOpenGlControl simpleOpenGlControl;
-        private System.Windows.Forms.Timer timer;
     }
 }

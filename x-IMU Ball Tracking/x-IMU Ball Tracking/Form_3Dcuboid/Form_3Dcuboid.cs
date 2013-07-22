@@ -17,11 +17,31 @@ namespace x_IMU_Ball_Tracking
     /// </summary>
     public partial class Form_3Dcuboid : Form
     {
-        #region Variables, constants and enumerations
+        #region Variables and enumerations
 
+        /// <summary>
+        /// Form update timer.
+        /// </summary>
+        private Timer formUpdateTimer;
+
+        /// <summary>
+        /// Array of image file paths.
+        /// </summary>
         private string[] imageFiles;
+
+        /// <summary>
+        /// Array of textures
+        /// </summary>
         private uint[] textures;
+
+        /// <summary>
+        /// Dimensions of cuboid.
+        /// </summary>
         private float halfXdimension, halfYdimension, halfZdimension;
+
+        /// <summary>
+        /// Transformation matrix describing translation and orientation of cuboid.
+        /// </summary>
         private float[] transformationMatrix;
 
         /// <summary>
@@ -44,29 +64,17 @@ namespace x_IMU_Ball_Tracking
         /// <summary>
         /// Gets or sets a value indicating whether the form should minimise when closed by the user.
         /// </summary>
-        public bool MinimizeInsteadOfClose
-        {
-            get;
-            set;
-        }
+        public bool MinimizeInsteadOfClose { get; set; }
 
         /// <summary>
-        /// Gets or sets a value describing the camera view of the cuboid.
+        /// Gets or sets a value describing the camera view of the cuboid. See Form_3Dcuboid.CameraViews.
         /// </summary>
-        public CameraViews CameraView
-        {
-            get;
-            set;
-        }
+        public CameraViews CameraView { get; set; }
 
         /// <summary>
         /// Gets or sets the distance of the camera from the world origin.
         /// </summary>
-        public float CameraDistance
-        {
-            get;
-            set;
-        }
+        public float CameraDistance { get; set; }
 
         /// <summary>
         /// Gets or sets the translation vector describing the position of the cuboid relative to world origin.
@@ -126,6 +134,93 @@ namespace x_IMU_Ball_Tracking
         /// <summary>
         /// Initializes a new instance of the <see cref="Form_3Dcuboid"/> class.
         /// </summary>
+        /// <param name="imageFilePaths">
+        /// File paths of images used for 6 faces of cuboid. Index order is: Right (+X), Left (-X), Back (+Y), Front (-Y), Top (+Z), and Bottom (-Z).
+        /// </param>
+        public Form_3Dcuboid(string[] imageFilePaths)
+            : this(imageFilePaths, new float[] { 6, 4, 2 }, CameraViews.Front, 50.0f)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form_3Dcuboid"/> class.
+        /// </summary>
+        /// <param name="imageFilePaths">
+        /// File paths of images used for 6 faces of cuboid. Index order is: Right (+X), Left (-X), Back (+Y), Front (-Y), Top (+Z), and Bottom (-Z).
+        /// </param>
+        /// <param name="dimensions">
+        /// Dimensions of the cuboid.
+        /// </param>
+        public Form_3Dcuboid(string[] imageFilePaths, float[] dimensions)
+            : this(imageFilePaths, dimensions, CameraViews.Front, 50.0f)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form_3Dcuboid"/> class.
+        /// </summary>
+        /// <param name="imageFilePaths">
+        /// File paths of images used for 6 faces of cuboid. Index order is: Right (+X), Left (-X), Back (+Y), Front (-Y), Top (+Z), and Bottom (-Z).
+        /// </param>
+        /// <param name="dimensions">
+        /// Dimensions of the cuboid.
+        /// </param>
+        /// <param name="cameraView">
+        /// Value describing the camera view of the cuboid.
+        /// </param>
+        public Form_3Dcuboid(string[] imageFilePaths, float[] dimensions, CameraViews cameraView)
+            : this(imageFilePaths, dimensions, cameraView, 50.0f)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form_3Dcuboid"/> class.
+        /// </summary>
+        /// <param name="imageFilePaths">
+        /// File paths of images used for 6 faces of cuboid. Index order is: Right (+X), Left (-X), Back (+Y), Front (-Y), Top (+Z), and Bottom (-Z).
+        /// </param>
+        /// <param name="cameraView">
+        /// Value describing the camera view of the cuboid.
+        /// </param>
+        public Form_3Dcuboid(string[] imageFilePaths, CameraViews cameraView)
+            : this(imageFilePaths, new float[] { 6, 4, 2 }, cameraView, 50.0f)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form_3Dcuboid"/> class.
+        /// </summary>
+        /// <param name="imageFilePaths">
+        /// File paths of images used for 6 faces of cuboid. Index order is: Right (+X), Left (-X), Back (+Y), Front (-Y), Top (+Z), and Bottom (-Z).
+        /// </param>
+        /// <param name="cameraView">
+        /// Value describing the camera view of the cuboid.
+        /// </param>
+        /// <param name="cameraDistance">
+        /// Distance of the camera from the world origin.
+        /// </param>
+        public Form_3Dcuboid(string[] imageFilePaths, CameraViews cameraView, float cameraDistance)
+            : this(imageFilePaths, new float[] { 6, 4, 2 }, cameraView, cameraDistance)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form_3Dcuboid"/> class.
+        /// </summary>
+        /// <param name="imageFilePaths">
+        /// File paths of images used for 6 faces of cuboid. Index order is: Right (+X), Left (-X), Back (+Y), Front (-Y), Top (+Z), and Bottom (-Z).
+        /// </param>
+        /// <param name="cameraDistance">
+        /// Distance of the camera from the world origin.
+        /// </param>
+        public Form_3Dcuboid(string[] imageFilePaths, float cameraDistance)
+            : this(imageFilePaths, new float[] { 6, 4, 2 }, CameraViews.Front, cameraDistance)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form_3Dcuboid"/> class.
+        /// </summary>
         /// <param name="dimensions">
         /// Dimensions of the cuboid.
         /// </param>
@@ -162,6 +257,20 @@ namespace x_IMU_Ball_Tracking
         /// </param>
         public Form_3Dcuboid(float[] dimensions, CameraViews cameraView, float cameraDistance)
             : this(new string[] { "Form_3Dcuboid/Right.png", "Form_3Dcuboid/Left.png", "Form_3Dcuboid/Back.png", "Form_3Dcuboid/Front.png", "Form_3Dcuboid/Top.png", "Form_3Dcuboid/Bottom.png" }, dimensions, cameraView, cameraDistance)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form_3Dcuboid"/> class.
+        /// </summary>
+        /// <param name="dimensions">
+        /// Dimensions of the cuboid.
+        /// </param>
+        /// <param name="cameraDistance">
+        /// Distance of the camera from the world origin.
+        /// </param>
+        public Form_3Dcuboid(float[] dimensions, float cameraDistance)
+            : this(new string[] { "Form_3Dcuboid/Right.png", "Form_3Dcuboid/Left.png", "Form_3Dcuboid/Back.png", "Form_3Dcuboid/Front.png", "Form_3Dcuboid/Top.png", "Form_3Dcuboid/Bottom.png" }, dimensions, CameraViews.Front, cameraDistance)
         {
         }
 
@@ -224,24 +333,34 @@ namespace x_IMU_Ball_Tracking
                                                 0.0f, 1.0f, 0.0f, 0.0f,
                                                 0.0f, 0.0f, 1.0f, 0.0f,
                                                 0.0f, 0.0f, 0.0f, 1.0f};
-            imageFiles = imageFilePaths; 
+            imageFiles = imageFilePaths;
             halfXdimension = dimensions[0] / 2;
             halfYdimension = dimensions[1] / 2;
             halfZdimension = dimensions[2] / 2;
             CameraView = cameraView;
             CameraDistance = cameraDistance;
+            formUpdateTimer = new Timer();
+            formUpdateTimer.Interval = 20;
+            formUpdateTimer.Tick += new EventHandler(formUpdateTimer_Tick);
         }
 
         #endregion
 
-        #region Form methods
+        #region Form events
 
         /// <summary>
-        /// Form load method to start form update timer.
+        /// Form visible changed event to start/stop form update formUpdateTimer.
         /// </summary>
-        private void Form_3Dcuboid_Load(object sender, EventArgs e)
+        private void Form_3Dcuboid_VisibleChanged(object sender, EventArgs e)
         {
-            timer.Start();
+            if (this.Visible)
+            {
+                formUpdateTimer.Start();
+            }
+            else
+            {
+                formUpdateTimer.Stop();
+            }
         }
 
         /// <summary>
@@ -259,7 +378,7 @@ namespace x_IMU_Ball_Tracking
         /// <summary>
         /// Timer tick event to refresh graphics.
         /// </summary>
-        private void timer_Tick(object sender, EventArgs e)
+        private void formUpdateTimer_Tick(object sender, EventArgs e)
         {
             lock (this)
             {
